@@ -3,6 +3,14 @@
  *
  * A jQuery plugin that scrapes HTML tables and generates charts with jqPlot
  *
+ * Created by David Eads (davideads__at__gmail_com), 2010 for the US 
+ * Department of Energy E-Center Project (see the project page at 
+ * https://ecenter.fnal.gov and the Google code project at 
+ * http://code.google.com/p/ecenter)
+ *
+ * Released under the Fermitools license (modified BSD). See LICENSE.txt for 
+ * more information.
+ *
  * Requires jqPlot (http://www.jqplot.com)
  * Requires the jQuery UUID plugin (http://plugins.jquery.com/project/uuid)
  *
@@ -46,11 +54,14 @@
  * and $.tablechart.parseText.
  *
  * By default, all table data is assumed to be expressed as floats. You may
- * need to use the parseText helper to account for dates, or define your own
- * parsing callback to strip out non-numeric characters or apply special number
- * formatting.
+ * need to use the parseText helper function to account for dates, or define 
+ * your own parsing callback to strip out non-numeric characters or apply 
+ * special number formatting.
  *
- * Options (no options are required):
+ * All configurable callbacks are call()'d with a $.tablechart instance 
+ * provided as the calling context.
+ *
+ * Configuration options (no options are required):
  *
  *  hideTables: Hide source tables (default: false)
  *  height: Height of chart container (default: null)
@@ -116,7 +127,7 @@ $.tablechart = function(el, options) {
 }
 
 /** 
- * Draw method
+ * Tablechart draw method
  */
 $.tablechart.prototype.draw = function() {
   var tables;
