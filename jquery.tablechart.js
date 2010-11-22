@@ -92,15 +92,12 @@
 $.fn.tablechart = function(options) {
   var options = $.extend(true, {}, $.fn.tablechart.defaults, options);
   this.each(function(i) {
-    charts = $(this).data('tablechart');
-    if (charts == undefined || charts[options.chartName] == undefined) {
-      tablechart = new $.tablechart(this, options);
-      data = {};
-      data[options.chartName] = tablechart;
-      $(this).data('tablechart', data);
-    } else {
-      charts[options.chartName].draw();
+    var charts = $(this).data('tablechart') || {};
+    if (charts[options.chartName] == undefined) {
+      charts[options.chartName] = new $.tablechart(this, options);
+      $(this).data('tablechart', charts);
     }
+    charts[options.chartName].draw();
   });
   return this;
 };
@@ -122,8 +119,6 @@ $.tablechart = function(el, options) {
 
   // Attach container
   options.attachMethod.call(this, this.chartContainer);
-
-  this.draw();
 }
 
 /** 
