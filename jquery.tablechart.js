@@ -147,6 +147,11 @@ $.tablechart.prototype.draw = function() {
   }
 
   // Draw chart
+
+  // @TODO Because I don't understand replotting in jqPlot (and/or it is buggy),
+  // we simply clear the container and redraw.  This is possibly not ideal, but 
+  // it works reliably.
+  $('#' + this.chartId).html('');
   if (series.length > 0) {
     this.chart = $.jqplot(this.chartId, series, this.options.plotOptions);
   }
