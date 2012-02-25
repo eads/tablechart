@@ -1,114 +1,4 @@
-/**
- * @file jquery.tablechart.js
- *
- * A jQuery plugin that scrapes HTML tables and generates charts with jqPlot
- *
- * Created by David Eads (davideads__at__gmail_com), 2010 for the US 
- * Department of Energy E-Center Project (see the project page at 
- * https://ecenter.fnal.gov and the Google code project at 
- * http://code.google.com/p/ecenter)
- *
- * Released under the Fermitools license (modified BSD). See LICENSE.txt for 
- * more information.
- *
- * Requires jqPlot (http://www.jqplot.com)
- * Requires the jQuery UUID plugin (http://plugins.jquery.com/project/uuid)
- *
- * Usage and behavior notes:
- *
- * Invoke with $(selector).tablechart({options}), or simply 
- * $(selector).tablechart()
- *
- * If the matched element returned by the selector is a table, a chart will
- * be generated from the table. If the matched element returned by the selector
- * contains one or more tables, all table data will be added to the chart.
- *
- * Using the default callbacks, data to be plotted should be wrapped in a proper 
- * <tbody> tag, and each row should provide a <th> tag that includes the x 
- * value for the row. Each column will be added as a new chart series.
- *
- * <table>
- *   <thead>
- *     <tr>
- *      <th>x-axis label</th>
- *      <th>Series 1 label</th>
- *      <th>Series 2 label</th>
- *     </tr>
- *   </thead>
- *   <tbody>
- *     <tr>
- *       <th>X value</th>
- *       <td>Series 1 (y) value</td>
- *       <td>Series 2 (y) value</td>
- *     </tr>
- *     ...
- *   </tbody>
- * </table>
- *
- * If a <thead> is provided and the headerSeriesLabels option is true, the
- * <thead> row will be used to generate series labels unless specified in
- * plotOptions.
- *
- * Series options may be overridden using a custom data attribute. If scraping
- * a single table with columns as series, set the data-jqplotSeriesOptions
- * attribute on the column's table header (thead th tag). If scraping multiple 
- * tablea as series, set the attribute on the table element. The attribute should 
- * contain a JSON representation of any allowed jqPlot series options. Examples
- * of single table, multiple table custom series options:
- *
- * <table>
- *   <thead>
- *     <tr>
- *      <th>x-axis label</th>
- *      <th data-jqplotSeriesOptions="{'linePattern':'dashed'}">Series 1 label</th>
- *      <th data-jqplotSeriesOptions="{'color':'#ff0000'}">Series 2 label</th>
- *     </tr>
- *   </thead>
- *   <tbody>...</tbody>
- * </table>
- *
- * <table data-jqplotSeriesOptions="{'lineWidth':'3.0'}"> ... </table>
- *
- * A note about parsing X and Y values: The tablechart plugin provides two 
- * trivial parsing callbacks for your parsing pleasure: $.tablechart.parseFloat
- * and $.tablechart.parseText.
- *
- * By default, all table data is assumed to be expressed as floats. You may
- * need to use the parseText helper function to account for dates, or define 
- * your own parsing callback to strip out non-numeric characters or apply 
- * special number formatting.
- *
- * All configurable callbacks are call()'d with a $.tablechart instance 
- * provided as the calling context.
- *
- * Configuration options (no options are required):
- *
- *  hideTables: Hide source tables. Boolean or callback to hide values
- *    (default: false)
- *  height: Height of chart container (default: null)
- *  width: Width of chart container (default: null)
- *  chartName: Optional chart name. Override the chart name to create multiple
- *    charts from the same source tables (default: 'default')
- *  headerSeriesLabels: Use headers in thead section to name series 
- *    (default: true)
- *  parseX: Callback to parse X values (default: $.tablechart.parseFloat)
- *  parseY: Callback to parse Y values (default: $.tablechart.parseFloat)
- *  scrapeSingle: Callback for scraping a single table 
- *    (default: $.tablechart.scrapeSingle)
- *  scrapeMultiple: Callback for scraping multiple tables
- *    (default: $.tablechart.scrapeMultiple)
- *  attachMethod: Callback for attaching chart
- *    (default: function(container) { $(this.el).before(container); })
- *  plotOptions: jqPlot options. See jqPlot options documentation for details:
- *    http://www.jqplot.com/docs/files/jqPlotOptions-txt.html
- * 
- */
-
 (function($) {
-
-/**
- * Table chart plugin
- */
 
 // Simple UID from http://forum.jquery.com/topic/return-unique-id-with-jquery-data-elem
 var uid = 0;
@@ -118,6 +8,9 @@ $.getUID = function() {
 };
 
 
+/**
+ * Table chart plugin
+ */
 $.fn.tablechart = function(options) {
   var options = $.extend(true, {}, $.fn.tablechart.defaults, options);
   this.each(function(i) {
