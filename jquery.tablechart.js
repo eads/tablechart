@@ -184,7 +184,7 @@ $.fn.tablechart.defaults = {
   width: null,
   chartName: 'default',
   headerSeriesLabels: true,
-  parseX: $.tablechart.parseFloat,
+  parseX: $.tablechart.parseText,
   parseY: $.tablechart.parseFloat,
   scrapeSingle: $.tablechart.scrapeSingle,
   scrapeMultiple: $.tablechart.scrapeMultiple,
