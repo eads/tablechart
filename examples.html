@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>jQuery Tablechart plugin examples</title>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <script src="http://www.jqplot.com/src/jquery.jqplot.min.js" type="text/javascript"></script>
+  <script src="http://www.jqplot.com/src/plugins/jqplot.categoryAxisRenderer.js" type="text/javascript"></script>
+  <script src="jquery.tablechart.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="http://www.jqplot.com/src/jquery.jqplot.min.css" />
+
+  <script type="text/javascript">
+    jQuery(document).ready(function() {
+      jQuery('#basic-table').tablechart();
+    });
+  </script>
+
+  <style>
+    body {
+      width: 900px;
+      padding: 0 20px;
+      font-family: Helvetica,Arial,sans-serif;
+    }
+    pre {
+      background-color: #ccc;
+      padding: 5px 10px;
+      border: 1px dotted #555;
+    }
+    table.data caption {
+      border-bottom: 1px dotted #999;
+    }
+    table.data td, table.data th {
+      text-align: center;
+      padding: 3px 8px;
+      border: 1px solid #fff;
+    }
+    table.data tbody td, table.data tbody th {
+      background-color: #ddd;
+    }  
+    .tablechart {
+      margin-bottom: 21px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>jQuery Tablechart plugin examples</h1>
+
+<p>Tablechart is a jQuery plugin that scrapes HTML tables and generates charts with jqPlot.</p>
+
+<p><em>These examples are a work-in-progress. Please contribute your own!</em>.</p>
+
+<h2>Basic usage</h2>
+
+<pre>$('#basic-table').tablechart();</pre>
+
+<table id="basic-table" class="data">
+  <caption>Pet sales by month, 2010</caption>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Puppies</th>
+      <th>Kittens</th>
+      <th>Goldfish</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Jan</th>
+      <td>5</td>
+      <td>13</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Feb</th>
+      <td>9</td>
+      <td>20</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Mar</th>
+      <td>5</td>
+      <td>19</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Apr</th>
+      <td>10</td>
+      <td>21</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>May</th>
+      <td>12</td>
+      <td>18</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Jun</th>
+      <td>15</td>
+      <td>22</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Jul</th>
+      <td>15</td>
+      <td>18</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Aug</th>
+      <td>13</td>
+      <td>19</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Sep</th>
+      <td>11</td>
+      <td>25</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Oct</th>
+      <td>17</td>
+      <td>23</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Nov</th>
+      <td>20</td>
+      <td>25</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Dec</th>
+      <td>21</td>
+      <td>28</td>
+      <td>12</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
