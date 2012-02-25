@@ -191,7 +191,31 @@ $.fn.tablechart.defaults = {
   attachMethod: function(container) { $(this.el).before(container); },
   hideTables: false,
   tableClass: 'jqplot-data',
-  plotOptions: {series: []}
+  plotOptions: {
+    series: [],
+    axes:{
+      xaxis: {
+        renderer: $.jqplot.CategoryAxisRenderer
+      }
+    },
+    legend: {
+      show: true,
+      location: 'se'
+    },
+    grid: {
+      background: '#ffffff',
+      gridLineColor: '#dddddd',
+      shadow: false
+    },
+    seriesDefaults: {
+      lineWidth: 1.5,
+      shadow: false,
+      markerOptions: {
+        size: 7,
+        shadow: false
+      }
+    }
+  }
 };
 
 })(jQuery);
