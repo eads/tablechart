@@ -4,13 +4,40 @@ Tablechart is a jQuery plugin that scrapes HTML tables and generates charts with
 
 Requires jqPlot (http://www.jqplot.com)
 
-Created by David Eads (davideads@gmail.com) for the US Department of Energy [E-Center Project](https://github.com/ecenter/ecenter). Released under the Fermitools license (modified BSD). See LICENSE.txt for 
-more information.
+Developed by David Eads (davideads@gmail.com). Originally created for the US Department of 
+Energy [E-Center Project](https://github.com/ecenter/ecenter). Released under the 
+Fermitools license (modified BSD). See LICENSE.txt for more information.
+
+## Setup
+
+jQuery 1.4+, jqPlot, and jqPlot's categoryAxisRenderer plugin are required
+in the default configuration. Any additional jqPlot plugins (such as the 
+dateAxisRenderer plugin for timeseries) must also be included. Your HTML should
+include a stanza similar to this:
+
+```
+<script src="path-to-jquery/jquery.min.js" type="text/javascript"></script>
+
+<script src="path-to-jqplot/jquery.jqplot.min.js" type="text/javascript"></script>
+<script src="path-to-jqplot/plugins/jqplot.categoryAxisRenderer.js" type="text/javascript"></script>
+<script src="path-to-jqplot/plugins/jqplot.dateAxisRenderer.js" type="text/javascript"></script>
+
+<script src="path-to-tablechart/jquery.tablechart.js" type="text/javascript"></script>
+
+<link type="style/css" rel="stylesheet" href="path-to-jqplot/jquery.jqplot.min.css" type="text/javascript" />
+```
 
 ## Basic usage
 
-Invoke with `$('selector').tablechart({options})`, or simply 
-`$('selector').tablechart()`.
+Invoke with:
+
+```
+$('table-selector').tablechart(options);
+``` 
+
+Options are not required.
+
+## Formatting your table(s)
 
 If the matched element returned by the selector is a table, a chart will
 be generated from the table. If the matched element returned by the selector
@@ -70,24 +97,26 @@ of single table, multiple table custom series options:
 <table data-jqplotSeriesOptions="{'lineWidth':'3.0'}"> ... </table>
 ```
 
-## Number parsing
+## Multiple charts from the same table(s)
 
-The tablechart plugin provides two trivial parsing callbacks to turn HTML strings into data for jqPlot: `$.tablechart.parseFloat` to convert strings to floating point numbers and `$.tablechart.parseText` to preserve strings.
-
-By default, all table data is assumed to be expressed as floats. You may wish to use the `parseText` helper function to account for dates, or define  your own parsing callback to strip out non-numeric characters or apply special number formatting and preprocessing.
-
-## Multiple charts from the same table
-
-To create multiple charts from the same table(s) (e.g. a bar chart and a line chart), include the `chartName` option when invoking tablechart:
+To create multiple charts from the same table(s) (e.g. a bar chart and a
+line chart), include the `chartName` option when invoking tablechart:
 
 ```
 $('.table-class').tablechart( {'chartName': 'bar-chart'} );
 $('.table-class').tablechart( {'chartName': 'line-chart'} );
 ```
 
-## Settings
+## Configurable callbacks
 
-All settings are optional.
+Most parts of Tablechart's processing and rendering system can be overriden
+via callbacks provided in the options. To override the default scraping and
+data parsing, override these options with your own functions.
+
+Configurable callbacks are called with a `$.tablechart` instance 
+provided as the calling context.
+
+## Options
 
  * `hideTables`: Hide source tables. Boolean or callback to hide values
    (default: `false`)
@@ -97,7 +126,7 @@ All settings are optional.
    charts from the same source tables (default: `'default'`)
  * `headerSeriesLabels`: Use headers in `thead` section to name series 
    (default: `true`)
- * `parseX`: Callback to parse X values (default: `$.tablechart.parseFloat`)
+ * `parseX`: Callback to parse X values (default: `$.tablechart.parseText`)
  * `parseY`: Callback to parse Y values (default: `$.tablechart.parseFloat`)
  * `scrapeSingle`: Callback for scraping a single table 
    (default: `$.tablechart.scrapeSingle`)
@@ -105,8 +134,5 @@ All settings are optional.
    (default: `$.tablechart.scrapeMultiple`)
  * `attachMethod`: Callback for attaching chart
    (default: `function(container) { $(this.el).before(container); }`)
- * `plotOptions`: jqPlot options. See [jqPlot options documentation](http://www.jqplot.com/docs/files/jqPlotOptions-txt.html) for more information.
-
-All configurable callbacks are `call`ed with a `$.tablechart` instance 
-provided as the calling context.
+ * `plotOptions`: jqPlot options. See [jqPlot options documentation](http://www.jqplot.com/docs/files/jqPlotOptions-txt.html) for more information and source for full list of defaults.
 
