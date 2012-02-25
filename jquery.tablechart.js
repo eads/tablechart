@@ -49,6 +49,26 @@
  * <thead> row will be used to generate series labels unless specified in
  * plotOptions.
  *
+ * Series options may be overridden using a custom data attribute. If scraping
+ * a single table with columns as series, set the data-jqplotSeriesOptions
+ * attribute on the column's table header (thead th tag). If scraping multiple 
+ * tablea as series, set the attribute on the table element. The attribute should 
+ * contain a JSON representation of any allowed jqPlot series options. Examples
+ * of single table, multiple table custom series options:
+ *
+ * <table>
+ *   <thead>
+ *     <tr>
+ *      <th>x-axis label</th>
+ *      <th data-jqplotSeriesOptions="{'linePattern':'dashed'}">Series 1 label</th>
+ *      <th data-jqplotSeriesOptions="{'color':'#ff0000'}">Series 2 label</th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>...</tbody>
+ * </table>
+ *
+ * <table data-jqplotSeriesOptions="{'lineWidth':'3.0'}"> ... </table>
+ *
  * A note about parsing X and Y values: The tablechart plugin provides two 
  * trivial parsing callbacks for your parsing pleasure: $.tablechart.parseFloat
  * and $.tablechart.parseText.
@@ -63,7 +83,8 @@
  *
  * Configuration options (no options are required):
  *
- *  hideTables: Hide source tables (default: false)
+ *  hideTables: Hide source tables. Boolean or callback to hide values
+ *    (default: false)
  *  height: Height of chart container (default: null)
  *  width: Width of chart container (default: null)
  *  chartName: Optional chart name. Override the chart name to create multiple
@@ -76,7 +97,6 @@
  *    (default: $.tablechart.scrapeSingle)
  *  scrapeMultiple: Callback for scraping multiple tables
  *    (default: $.tablechart.scrapeMultiple)
- *  processSeries: Callback for series post-processing (default: null)
  *  attachMethod: Callback for attaching chart
  *    (default: function(container) { $(this.el).before(container); })
  *  plotOptions: jqPlot options. See jqPlot options documentation for details:
@@ -89,6 +109,15 @@
 /**
  * Table chart plugin
  */
+
+// Simple UID from http://forum.jquery.com/topic/return-unique-id-with-jquery-data-elem
+var uid = 0;
+$.getUID = function() {
+  uid++;
+  return 'jQ-uid-'+uid;
+};
+
+
 $.fn.tablechart = function(options) {
   var options = $.extend(true, {}, $.fn.tablechart.defaults, options);
   this.each(function(i) {
@@ -111,7 +140,8 @@ $.tablechart = function(el, options) {
   this.el = el;
 
   // Create container
-  this.chartId = $.uuid('chart-');
+  this.chartId = 'chart-' + $.getUID();
+  var test = $.data(this);
   this.chartContainer = $('<div class="tablechart">').attr('id', this.chartId);
 
   if (options.height) { this.chartContainer.height(options.height); }
@@ -125,35 +155,37 @@ $.tablechart = function(el, options) {
  * Tablechart draw method
  */
 $.tablechart.prototype.draw = function() {
-  var tables;
+  var tables, data;
 
   // Is matched element a table?
   if (!$.nodeName(this.el, 'table')) {
     tables = $('table', this.el);
-    series = this.options.scrapeMultiple.call(this, tables);
+    data = this.options.scrapeMultiple.call(this, tables);
   } else {
     tables = $(this.el);
-    series = this.options.scrapeSingle.call(this, tables);
+    data = this.options.scrapeSingle.call(this, tables);
   }
 
   // Hide tables
-  if (this.options.hideTables) {
+  if (this.options.hideTables && $.isFunction(this.options.hideTables)) {
+    this.options.hideTables.call(this, tables);
+  }
+  else if (this.options.hideTables) {
     tables.hide();
   }
 
-  // Apply any additional series processing
-  if (this.options.processSeries) {
-    series = this.options.processSeries.call(this, series);
+  // Add class
+  if (this.options.tableClass) {
+    $(this.el).addClass(this.options.tableClass);
   }
-
-  // Draw chart
-
+  
   // @TODO Because I don't understand replotting in jqPlot (and/or it is buggy),
   // we simply clear the container and redraw.  This is possibly not ideal, but 
   // it works reliably.
   $('#' + this.chartId).html('');
-  if (series.length > 0) {
-    this.chart = $.jqplot(this.chartId, series, this.options.plotOptions);
+  if (data.series.length > 0) {
+    $.extend(true, this.options.plotOptions.series, data.options); 
+    this.chart = $.jqplot(this.chartId, data.series, this.options.plotOptions);
   }
 }
 
@@ -161,9 +193,10 @@ $.tablechart.prototype.draw = function() {
  * Utility function: Scrape single table for values
  */
 $.tablechart.scrapeSingle = function(table) {
-  var series = [];
-  var options = this.options;
-  var tablechart = this;
+  var series = [],
+      options = this.options,
+      tablechart = this,
+      seriesOptions = [];
 
   if (options.headerSeriesLabels) {
     $(table).find('thead th:gt(0)').each(function(i) {
@@ -171,6 +204,12 @@ $.tablechart.scrapeSingle = function(table) {
         {label: $(this).text()}, 
         options.plotOptions.series[i]
       );
+
+      // Extend options with custom data attribute     
+      var seriesData = $(this).data('jqplotSeriesOptions');
+      if (typeof seriesData != 'undefined') {
+        seriesOptions[i] = seriesData;
+      }
     });
   }
 
@@ -188,16 +227,17 @@ $.tablechart.scrapeSingle = function(table) {
     });
   });
 
-  return series;
+  return { 'series' : series, 'options' : seriesOptions };
 }
 
 /**
  * Utility function: Scrape multiple tables for values
  */
 $.tablechart.scrapeMultiple = function(tables) {
-  var series = [];
-  var options = this.options;
-  var tablechart = this;
+  var series = [],
+      options = this.options,
+      tablechart = this,
+      seriesOptions = [];
 
   // Flip on magical "internal" option if scraping multiple
   if (options.headerSeriesLabels) {
@@ -206,22 +246,27 @@ $.tablechart.scrapeMultiple = function(tables) {
   }
 
   var series_idx = 0;
-  $(tables).each(function() {
-    // Generate series labels (requires "global" counter)
-    if (tablechart.options.multitablesHeaderSeriesLabels) {
-      $(this).find('thead th:gt(0)').each(function() {
-        options.plotOptions.series[series_idx] = $.extend(
-          {label: $(this).text()}, 
-          options.plotOptions.series[series_idx]
-        );
-        series_idx += 1;
-      });
+  $(tables)
+  .not('.jqplot-target table') // Filter out jqplot-added tables
+  .each(function(i) {
+    var table = this;
+    seriesOptions[i] = {};
+
+    // Extend options with custom data attribute     
+    var inlineOptions = $(this).data('jqplotSeriesOptions');
+    if (typeof inlineOptions != 'undefined') {
+      seriesOptions[i] = $.extend(seriesOptions[i], inlineOptions);
     }
-    // Now simply scrape each matched table
-    series = series.concat($.tablechart.scrapeSingle.call(tablechart, this));
+
+    // Scrape each matched table
+    data = $.tablechart.scrapeSingle.call(tablechart, this);
+    series = series.concat(data.series);
+
+    // Options passed in constructor override others
+    seriesOptions[i] =  $.extend(seriesOptions[i], data.options, options.plotOptions.series[i]); 
   });
 
-  return series;
+  return { 'series' : series, 'options' : seriesOptions };
 }
 
 /**
@@ -242,7 +287,6 @@ $.tablechart.parseFloat = function(el) {
  * Defaults
  */
 $.fn.tablechart.defaults = {
-  hideTables: false,
   height: null,
   width: null,
   chartName: 'default',
@@ -251,8 +295,9 @@ $.fn.tablechart.defaults = {
   parseY: $.tablechart.parseFloat,
   scrapeSingle: $.tablechart.scrapeSingle,
   scrapeMultiple: $.tablechart.scrapeMultiple,
-  processSeries: null,
   attachMethod: function(container) { $(this.el).before(container); },
+  hideTables: false,
+  tableClass: 'jqplot-data',
   plotOptions: {series: []}
 };
 
