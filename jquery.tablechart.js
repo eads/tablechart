@@ -193,6 +193,7 @@ $.fn.tablechart.defaults = {
   tableClass: 'jqplot-data',
   plotOptions: {
     series: [],
+    seriesColors: [ '#b2182b', '#2166ac', '#542788', '#b35806', '#8073ac', '#fdb863' ],
     axes:{
       xaxis: {
         renderer: $.jqplot.CategoryAxisRenderer
@@ -213,8 +214,11 @@ $.fn.tablechart.defaults = {
       markerOptions: {
         size: 7,
         shadow: false
+      },
+      rendererOptions: {
+        barPadding: 4 
       }
-    }
+    },
   }
 };
 
