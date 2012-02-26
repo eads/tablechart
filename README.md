@@ -8,6 +8,11 @@ Developed by David Eads (davideads@gmail.com). Originally created for the US Dep
 Energy [E-Center Project](https://github.com/ecenter/ecenter). Released under the 
 Fermitools license (modified BSD). See LICENSE.txt for more information.
 
+## Examples
+
+See [examples.html](examples.html) for code samples and example usage.
+The repository includes recent versions of jQuery and jqPlot for convenience.
+
 ## Setup
 
 jQuery 1.4+, jqPlot, and jqPlot's categoryAxisRenderer plugin are required
