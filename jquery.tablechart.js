@@ -34,7 +34,6 @@ $.tablechart = function(el, options) {
 
   // Create container
   this.chartId = 'chart-' + $.getUID();
-  var test = $.data(this);
   this.chartContainer = $('<div class="tablechart">').attr('id', this.chartId);
 
   if (options.height) { this.chartContainer.height(options.height); }
