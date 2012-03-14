@@ -178,7 +178,7 @@ $.fn.tablechart.defaults = {
     },
     legend: {
       show: true,
-      location: 'se'
+      location: 'nw'
     },
     grid: {
       background: '#ffffff',
