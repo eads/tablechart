@@ -80,20 +80,23 @@ plotOptions.
 
 ## Custom series options
 
-Series options may be overridden using a custom data attribute. If scraping
-a single table with columns as series, set the data-jqplotSeriesOptions
-attribute on the column's table header (thead th tag). If scraping multiple 
-tablea as series, set the attribute on the table element. The attribute should 
-contain a JSON representation of any allowed jqPlot series options. Examples
-of single table, multiple table custom series options:
+Series options may be overridden using a custom data attribute. To set per-series
+options with a data element, set the `data-seriesoptions` attribute on the column's 
+`thead th` tags which represent the series. The attribute must contain a JSON
+representation of jqPlot series options (note that quoting matters):
 
 ```
 <table>
   <thead>
     <tr>
      <th>x-axis label</th>
-     <th data-jqplotSeriesOptions="{'linePattern':'dashed'}">Series 1 label</th>
      <th data-jqplotSeriesOptions="{'color':'#ff0000'}">Series 2 label</th>
+      <th data-seriesoptions='{"renderer":"$.jqplot.BarRenderer","color":"#aaaaaa"}'>
+        Series 1 label
+      </th>
+      <th data-seriesoptions='{"lineWidth":4,"markerOptions":{"size":15}}'>
+        Series 2 labels
+      </th>
     </tr>
   </thead>
   <tbody>...</tbody>

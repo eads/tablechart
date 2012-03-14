@@ -89,15 +89,16 @@ $.tablechart.scrapeSingle = function(table) {
   var series = [],
       options = this.options,
       tablechart = this,
-      seriesOptions = [],
       offset = this.offset;
 
   if (options.headerSeriesLabels) {
     $(table).find('thead th:gt(0)').each(function(i) {
-      idx = offset + i;
+      var idx = offset + i,
+          dataOptions = $.tablechart.replaceOptions($(this).data('seriesoptions'));
       options.plotOptions.series[idx] = $.extend(
         {label: $(this).text()}, 
-        options.plotOptions.series[idx]
+        options.plotOptions.series[idx],
+        dataOptions
       );
     });
   }
@@ -152,6 +153,39 @@ $.tablechart.parseText = function(el) {
 $.tablechart.parseFloat = function(el) {
   return parseFloat($(el).text());
 }
+
+/**
+ * Constant for replacement
+ */
+$.tablechart.REPLACE = ['renderer', 'markerRenderer', 'labelRenderer', 'parseX',
+    'parseY', 'scrapeSingle', 'scrapeMultiple', 'tickRenderer',
+    'processSeries', 'formatter', 'tooltipContentEditor'];
+
+/**
+ * Utility function: Replace whitelisted string options with their 
+ * function callback.
+ */
+$.tablechart.replaceOptions = function(obj) {
+  if (!obj) {
+    return obj;
+  }
+  $.each(obj, function(key, val) {
+    if (typeof val == 'object') {
+      obj[key] = $.tablechart.replaceOptions(val);
+    }
+    else if (typeof val == 'string' && $.inArray(key, $.tablechart.REPLACE) > -1) {
+      namespaces = val.split(".");
+      func = namespaces.pop();
+      context = window;
+      for (var i = 0; i < namespaces.length; i++) {
+        context = context[namespaces[i]];
+      }
+      obj[key] = context[func];
+    }
+  });
+  return obj;
+}
+
 
 /**
  * Defaults
