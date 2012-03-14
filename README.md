@@ -90,12 +90,11 @@ representation of jqPlot series options (note that quoting matters):
   <thead>
     <tr>
      <th>x-axis label</th>
-     <th data-jqplotSeriesOptions="{'color':'#ff0000'}">Series 2 label</th>
       <th data-seriesoptions='{"renderer":"$.jqplot.BarRenderer","color":"#aaaaaa"}'>
         Series 1 label
       </th>
       <th data-seriesoptions='{"lineWidth":4,"markerOptions":{"size":15}}'>
-        Series 2 labels
+        Series 2 label
       </th>
     </tr>
   </thead>

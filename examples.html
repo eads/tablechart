@@ -68,6 +68,8 @@
           }
         },
       });
+      
+      $('#series-options').tablechart();
     });
   })(jQuery);
   </script>
@@ -621,6 +623,109 @@ $('#multiple-axes').tablechart({
     </tr>
   </tbody>
 </table> 
+
+<h2>Series attribute options</h2>
+
+<p>Requires <code>jqplot.barRenderer.js</code>.</p>
+
+<pre>
+$('#series-options').tablechart();
+</pre>
+
+<p>The magic is not in the invocation but in the markup:</p>
+
+<pre>
+&lt;thead&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Month&lt;/th&gt;
+    &lt;th data-seriesoptions='{"renderer":"$.jqplot.BarRenderer","color":"#aaaaaa"}'&gt;
+      Beans
+    &lt;/th&gt;
+    &lt;th data-seriesoptions='{"lineWidth":4,"markerOptions":{"size":15}}'&gt;
+      Rice
+    &lt;/th&gt;
+  &lt;/tr&gt;
+&lt;/thead&gt;
+</pre>
+
+<table id="series-options" class="data">
+  <caption>Beans and rice sales, 2010</caption>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th data-seriesoptions='{"renderer":"$.jqplot.BarRenderer","color":"#aaaaaa"}'>
+        Beans
+      </th>
+      <th data-seriesoptions='{"lineWidth":4,"markerOptions":{"size":15}}'>
+        Rice
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Jan</th>
+      <td>100</td>
+      <td>90</td>
+    </tr>
+    <tr>
+      <th>Feb</th>
+      <td>175</td>
+      <td>140</td>
+    </tr>
+    <tr>
+      <th>Mar</th>
+      <td>180</td>
+      <td>145</td>
+    </tr>
+    <tr>
+      <th>Apr</th>
+      <td>120</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>May</th>
+      <td>157</td>
+      <td>149</td>
+    </tr>
+    <tr>
+      <th>Jun</th>
+      <td>150</td>
+      <td>145</td>
+    </tr>
+    <tr>
+      <th>Jul</th>
+      <td>151</td>
+      <td>123</td>
+    </tr>
+    <tr>
+      <th>Aug</th>
+      <td>132</td>
+      <td>101</td>
+    </tr>
+    <tr>
+      <th>Sep</th>
+      <td>114</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>Oct</th>
+      <td>179</td>
+      <td>107</td>
+    </tr>
+    <tr>
+      <th>Nov</th>
+      <td>209</td>
+      <td>160</td>
+    </tr>
+    <tr>
+      <th>Dec</th>
+      <td>321</td>
+      <td>281</td>
+    </tr>
+  </tbody>
+</table> 
+
+
 
 </body>
 </html>
