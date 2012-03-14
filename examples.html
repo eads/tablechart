@@ -5,6 +5,7 @@
   <title>jQuery Tablechart plugin examples</title>
 
   <script src="lib/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+  <script src="lib/jqplot/excanvas.min.js" type="text/javascript"></script>
   <script src="lib/jqplot/jquery.jqplot.min.js" type="text/javascript"></script>
   <script src="lib/jqplot/plugins/jqplot.categoryAxisRenderer.js" type="text/javascript"></script>
   <script src="lib/jqplot/plugins/jqplot.barRenderer.js" type="text/javascript"></script>
@@ -452,7 +453,7 @@ $('#barchart-table').tablechart({
 
 <h2>Numeric x-axis</h2>
 
-<p>Here, we use the parseFloat parser for x values and the jqPlot LinerAxisRenderer to create a x-y traditional plot. Note how the discontinuities in the data are accurately reflected in the chart.</p>
+<p>Here, we use the <code>parseFloat</code> parser for x values and the jqPlot <code>LinearAxisRenderer</code> to create a x-y traditional plot. Note how the discontinuities in the data are accurately reflected in the chart.</p>
 
 <pre>
 $('#plot-table').tablechart({
@@ -724,8 +725,6 @@ $('#series-options').tablechart();
     </tr>
   </tbody>
 </table> 
-
-
 
 </body>
 </html>
