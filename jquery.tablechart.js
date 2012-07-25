@@ -51,7 +51,11 @@ $.tablechart = function(el, options) {
 $.tablechart.prototype.draw = function() {
   var tables, data;
 
-  // Is matched element a table?
+  if (this.chart) {
+    this.offset = 0;
+    this.series = [];
+  }
+    // Is matched element a table?
   if (!$.nodeName(this.el, 'table')) {
     tables = $('table', this.el);
     this.options.scrapeMultiple.call(this, tables);
@@ -60,25 +64,16 @@ $.tablechart.prototype.draw = function() {
     this.options.scrapeSingle.call(this, tables);
   }
 
-  // Hide tables
-  if (this.options.hideTables && $.isFunction(this.options.hideTables)) {
-    this.options.hideTables.call(this, tables);
-  }
-  else if (this.options.hideTables) {
-    tables.hide();
-  }
-
-  // Add class
-  if (this.options.tableClass) {
-    $(this.el).addClass(this.options.tableClass);
-  }
-  
-  // @TODO Because I don't understand replotting in jqPlot (and/or it is buggy),
-  // we simply clear the container and redraw.  This is possibly not ideal, but 
-  // it works reliably.
-  $('#' + this.chartId).html('');
-  if (this.series.length > 0) {
+  if (!this.chart) {
     this.chart = $.jqplot(this.chartId, this.series, this.options.plotOptions);
+  }
+  else {
+    for (i=0; i < this.series.length; i++) {
+      if (this.chart.series[i] != undefined) {
+        this.chart.series[i].data = this.series[i];
+        this.chart.replot();  // replot options {resetAxes: true});
+      }
+    }
   }
 }
 
@@ -200,8 +195,6 @@ $.fn.tablechart.defaults = {
   scrapeSingle: $.tablechart.scrapeSingle,
   scrapeMultiple: $.tablechart.scrapeMultiple,
   attachMethod: function(container) { $(this.el).before(container); },
-  hideTables: false,
-  tableClass: 'jqplot-data',
   plotOptions: {
     series: [],
     seriesColors: [ '#b2182b', '#2166ac', '#542788', '#b35806', '#8073ac', '#fdb863' ],
