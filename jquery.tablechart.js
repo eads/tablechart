@@ -150,51 +150,16 @@ $.tablechart.parseFloat = function(el) {
 }
 
 /**
- * Constant for replacement
- */
-$.tablechart.REPLACE = ['renderer', 'markerRenderer', 'labelRenderer', 'parseX',
-    'parseY', 'scrapeSingle', 'scrapeMultiple', 'tickRenderer',
-    'processSeries', 'formatter', 'tooltipContentEditor'];
-
-/**
- * Utility function: Replace whitelisted string options with their 
- * function callback.
- */
-$.tablechart.replaceOptions = function(obj) {
-  if (!obj) {
-    return obj;
-  }
-  $.each(obj, function(key, val) {
-    if (typeof val == 'object') {
-      obj[key] = $.tablechart.replaceOptions(val);
-    }
-    else if (typeof val == 'string' && $.inArray(key, $.tablechart.REPLACE) > -1) {
-      namespaces = val.split(".");
-      func = namespaces.pop();
-      context = window;
-      for (var i = 0; i < namespaces.length; i++) {
-        context = context[namespaces[i]];
-      }
-      obj[key] = context[func];
-    }
-  });
-  return obj;
-}
-
-
-/**
  * Defaults
  */
 $.fn.tablechart.defaults = {
   height: null,
   width: null,
   chartName: 'default',
-  headerSeriesLabels: true,
-  parseX: $.tablechart.parseText,
-  parseY: $.tablechart.parseFloat,
-  scrapeSingle: $.tablechart.scrapeSingle,
-  scrapeMultiple: $.tablechart.scrapeMultiple,
-  attachMethod: function(container) { $(this.el).before(container); },
+  parseX: parseText,
+  parseY: parseFloat,
+  //scrapeSingle: $.tablechart.scrapeSingle,
+  //scrapeMultiple: $.tablechart.scrapeMultiple,
   plotOptions: {
     series: [],
     seriesColors: [ '#b2182b', '#2166ac', '#542788', '#b35806', '#8073ac', '#fdb863' ],

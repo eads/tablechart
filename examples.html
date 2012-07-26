@@ -18,8 +18,8 @@
   <script type="text/javascript">
   (function($) {
     function updateTable(scale) {
-      $('#animate-formula').find('tbody').find('td').each(function(i) {
-        $(this).text( Math.pow(i, scale * .17) );
+      $('#animate-formula tbody td').each(function(i) {
+        $(this).text( Math.pow(i, (0.05 * scale)) );
       });
     }
     function createTable() {
