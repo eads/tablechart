@@ -134,7 +134,7 @@
 
   <style>
     body {
-      width: 960px;
+      width: 1100px;
       padding: 0 20px;
       font-family: Helvetica,Arial,sans-serif;
     }
@@ -168,7 +168,8 @@
     }
     .tablechart {
       float: right;
-      width: 600px;
+      width: 740px;
+      height: 400px;
     }
     #slider { 
       width: 300px;
@@ -515,7 +516,7 @@ $('#barchart-table').tablechart({
 
 <pre>
 $('#plot-table').tablechart({
-  parseX: $.tablechart.parseFloat,
+  parseX: Tablechart.parseFloat,
   plotOptions: {
     axes: {
       xaxis: {
@@ -688,10 +689,21 @@ $('#multiple-axes').tablechart({
 <p>Requires <code>jqplot.barRenderer.js</code>.</p>
 
 <pre>
-$('#series-options').tablechart();
+$('#series-options').tablechart({
+  parseOptions: true,
+  plotOptions: {
+    axes: {
+      xaxis: {
+        renderer: $.jqplot.LinearAxisRenderer,
+        min: 0,
+        max: 100
+      },
+    }
+  }
+});
 </pre>
 
-<p>The magic is not in the invocation but in the markup:</p>
+<p>Other than setting <code>parseOptions</code> to <code>true</code>, the magic is not in the invocation but in the markup:</p>
 
 <pre>
 &lt;thead&gt;

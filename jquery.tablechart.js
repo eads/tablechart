@@ -87,7 +87,6 @@ Tablechart.prototype.scrape = function(table) {
       if (i == 0) {
         data[idx] = [];
       }
-      //}
       y = options.parseY.call(tablechart, this);
       data[idx].push([x, y]);
     });
