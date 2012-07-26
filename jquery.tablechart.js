@@ -71,7 +71,7 @@ $.tablechart.prototype.draw = function() {
     for (i=0; i < this.series.length; i++) {
       if (this.chart.series[i] != undefined) {
         this.chart.series[i].data = this.series[i];
-        this.chart.replot();  // replot options {resetAxes: true});
+        this.chart.replot(this.options.replotOptions);  
       }
     }
   }
@@ -222,8 +222,9 @@ $.fn.tablechart.defaults = {
       rendererOptions: {
         barPadding: 4 
       }
-    },
-  }
+    }
+  },
+  replotOptions: { resetAxes: true }
 };
 
 })(jQuery);

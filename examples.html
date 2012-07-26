@@ -101,7 +101,7 @@
       $('#slider').slider({
         min:1, 
         max: 10,
-        step: 0.1,
+        step: 0.5,
         slide: function(event, ui) {
           updateTable(ui.value);
           $('#animate-formula').tablechart();
@@ -109,22 +109,10 @@
       });
       
       createTable();
-      updateTable(1);
+      updateTable(0);
       $('#animate-formula').tablechart({
         parseX: $.tablechart.parseFloat,
         plotOptions: {
-          chartName: 'myChart',
-          axes: {
-            xaxis: {
-              renderer: $.jqplot.LinearAxisRenderer,
-              min: 0,
-              max: 50
-            },
-            yaxis: {
-              min: 0,
-              max: 800
-            }
-          },
           legend: {
             show: false
           }
@@ -1232,7 +1220,7 @@ $('#series-options').tablechart();
 
 <div id="slider"></div>
 
-<table id="animate-formula">
+<table id="animate-formula" style="display: none;">
   <thead>
     <tr>
       <th>x</th>
