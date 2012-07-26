@@ -18,14 +18,16 @@
   <script type="text/javascript">
   (function($) {
     function updateTable(scale) {
-      $('#animate-formula tbody td').each(function(i) {
-        $(this).text( Math.pow(i, (0.05 * scale)) );
+    $('#animate-formula tbody td').each(function(i) {
+        //var value = parseFloat(this.innerText);
+        //$(this).text( (scale + 1) * (.002 * i * i) );
+        $(this).text( (scale + 1) * Math.cos( i / Math.PI ) );
       });
     }
     function createTable() {
       var tbody = $('#animate-formula').find('tbody');
       var i = 0;
-      while (i < 50) {
+      while (i < 100) {
         var row = $('<tr>').appendTo(tbody).append('<th>' + i + '</th>').append('<td>');
         i += 1;
       }
@@ -46,7 +48,7 @@
       $('#multiple-tables').tablechart();
       
       $('#plot-table').tablechart({
-        //parseX: Tablechart.parseFloat,
+        parseX: Tablechart.parseFloat,
         plotOptions: {
           axes: {
             xaxis: {
@@ -87,6 +89,7 @@
       });
       
       $('#series-options').tablechart({
+        parseOptions: true,
         plotOptions: {
           axes: {
             xaxis: {
@@ -99,9 +102,9 @@
       });
 
       $('#slider').slider({
-        min:1, 
+        min: 0, 
         max: 10,
-        step: 0.5,
+        step: 0.01,
         slide: function(event, ui) {
           updateTable(ui.value);
           $('#animate-formula').tablechart();
@@ -111,10 +114,16 @@
       createTable();
       updateTable(0);
       $('#animate-formula').tablechart({
-        //parseX: $.tablechart.parseFloat,
+        parseX: Tablechart.parseFloat,
         plotOptions: {
           legend: {
             show: false
+          },
+          axes: {
+            yaxis: { 
+              min: -5,
+              max: 5
+            }
           }
         }
       });
