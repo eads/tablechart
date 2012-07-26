@@ -74,11 +74,7 @@ Tablechart.prototype.scrape = function(table) {
     if (options.parseOptions) {
       dataOptions = Tablechart.replaceOptions($(this).data('seriesoptions'));
     }
-    options.plotOptions.series[idx] = $.extend({
-      label: $(this).text()}, 
-      options.plotOptions.series[idx],
-      dataOptions
-    );
+    options.plotOptions.series[idx] = $.extend({label: $(this).text()}, options.plotOptions.series[idx], dataOptions);
   });
 
   $(table).find('tbody tr').each(function(i) {
@@ -87,14 +83,17 @@ Tablechart.prototype.scrape = function(table) {
       x = options.parseX.call(tablechart, this);
     });
     $(this).find('td').each(function(j) {
-      idx = offset + j
+      var idx = offset + j;
       if (i == 0) {
         data[idx] = [];
       }
+      //}
       y = options.parseY.call(tablechart, this);
       data[idx].push([x, y]);
     });
   });
+
+  this.offset = data.length;
 }
 
 /**
