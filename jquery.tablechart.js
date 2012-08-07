@@ -15,9 +15,10 @@ function getUID() {
 $.fn.tablechart = function(options) {
   var options = $.extend(true, {}, $.fn.tablechart.defaults, options);
   this.each(function(i) {
-    var charts = $(this).data('tablechart') || {};
+    var charts = $(this).data('tablechart') || {},
+        opts_clone = $.extend(true, {}, options);
     if (charts[options.chartName] == undefined) {
-      charts[options.chartName] = new Tablechart(this, options);
+      charts[options.chartName] = new Tablechart(this, opts_clone);
     } 
     charts[options.chartName].plot();
     $(this).data('tablechart', charts);
@@ -30,23 +31,20 @@ Tablechart = function(el, options) {
   this.el = el;
   this.chart_id = 'chart-' + getUID();
   this.data = [];
-  
   this.chart = this.create();
-  this.plot();
 }
  
 
 Tablechart.prototype.create = function() {
   // Create container
   var chartContainer = $('<div class="tablechart">').attr('id', this.chart_id).insertBefore($(this.el));
-  if (this.options.height) { chartContainer.height(options.height); }
-  if (this.options.width)  { chartContainer.width(options.width); }
+  if (this.options.height) { chartContainer.height(this.options.height); }
+  if (this.options.width)  { chartContainer.width(this.options.width); }
 }
 
 Tablechart.prototype.plot = function() {
   this.offset = 0;
   tablechart = this;
-  // Consolidate plotting here 
   if (!$.nodeName(this.el, 'table')) {
     $('table', this.el).each(function() {
       tablechart.scrape(this);
@@ -92,7 +90,7 @@ Tablechart.prototype.scrape = function(table) {
     });
   });
 
-  this.offset = data.length;
+  this.offset = data.length; 
 }
 
 /**
