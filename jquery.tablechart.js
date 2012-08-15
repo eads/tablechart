@@ -59,7 +59,7 @@ Tablechart.prototype.plot = function() {
 }
 
 /**
- * Utility function: Scrape single table for values
+ * Scrape single table for values
  */
 Tablechart.prototype.scrape = function(table) {
   var tablechart = this,
@@ -74,7 +74,7 @@ Tablechart.prototype.scrape = function(table) {
     }
     options.plotOptions.series[idx] = $.extend({label: $(this).text()}, options.plotOptions.series[idx], dataOptions);
   });
-
+  
   $(table).find('tbody tr').each(function(i) {
     var x = 0, y = 0;
     $(this).find('th').each(function() {
@@ -97,14 +97,14 @@ Tablechart.prototype.scrape = function(table) {
  * Utility function: Parse text
  */
 Tablechart.parseText = function(el) {
-  return el.innerText;
+  return $(el).text();
 }
 
 /**
  * Utility function: Parse text to floating point
  */
 Tablechart.parseFloat = function(el) {
-  return parseFloat(el.innerText);
+  return parseFloat($(el).text());
 }
 
 Tablechart.REPLACE = ['renderer', 'markerRenderer', 'labelRenderer', 'parseX',
