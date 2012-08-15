@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>jQuery Tablechart plugin examples</title>
+
+  <script src="lib/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+  <script src="lib/jqplot/excanvas.min.js" type="text/javascript"></script>
+  <script src="lib/jqplot/jquery.jqplot.min.js" type="text/javascript"></script>
+  <script src="lib/jqplot/plugins/jqplot.categoryAxisRenderer.js" type="text/javascript"></script>
+  <script src="lib/jqplot/plugins/jqplot.barRenderer.js" type="text/javascript"></script>
+  <script src="lib/jqplot/plugins/jqplot.pointLabels.js" type="text/javascript"></script>
+  <script src="jquery.tablechart.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="lib/jqplot/jquery.jqplot.min.css" />
+
+  <script type="text/javascript">
+  (function($) {
+    $(document).ready(function() {
+
+      $('#basic-table').tablechart();
+
+      $('#barchart-table').tablechart({
+        plotOptions: {
+          seriesDefaults: {
+            renderer: $.jqplot.BarRenderer,
+          },
+        }
+      });
+      
+      $('#multiple-tables').tablechart();
+      
+      $('#plot-table').tablechart({
+        parseX: Tablechart.parseFloat,
+        plotOptions: {
+          axes: {
+            xaxis: {
+              renderer: $.jqplot.LinearAxisRenderer,
+              min: 0,
+              max: 7,
+              numberTicks: 8
+            },
+            yaxis: {
+              min: 0,
+              max: 40
+            }
+          },
+          legend: {
+            show: false
+          }
+        }
+      });
+
+      $('#multiple-axes').tablechart({
+        plotOptions: {
+          seriesColors: [ '#999999', '#2166ac' ],
+          seriesDefaults: {
+            pointLabels: { show: true },
+          },
+          series: [{
+            renderer: $.jqplot.BarRenderer,
+            yaxis: 'y2axis',
+            rendererOptions: { barWidth: 10 },
+          }],
+          axes: {
+            y2axis: { 
+              min: 0,
+              max: 600
+            }
+          }
+        },
+      });
+      
+      $('#series-options').tablechart({
+        parseOptions: true,
+        plotOptions: {
+          axes: {
+            xaxis: {
+              renderer: $.jqplot.LinearAxisRenderer,
+              min: 0,
+              max: 100
+            },
+          }
+        }
+      });
+
+      $('#slider').slider({
+        min: 0, 
+        max: 10,
+        step: 0.01,
+        slide: function(event, ui) {
+          updateTable(ui.value);
+          $('#animate-formula').tablechart();
+        }
+      });
+      
+      createTable();
+      updateTable(0);
+      $('#animate-formula').tablechart({
+        parseX: Tablechart.parseFloat,
+        plotOptions: {
+          legend: {
+            show: false
+          },
+          axes: {
+            yaxis: { 
+              min: -5,
+              max: 5
+            }
+          }
+        }
+      });
+
+    });
+  })(jQuery);
+  </script>
+
+  <style>
+    body {
+      width: 1100px;
+      padding: 0 20px;
+      font-family: Helvetica,Arial,sans-serif;
+    }
+    pre {
+      background-color: #eee;
+      padding: 5px 10px;
+      border: 1px dotted #555;
+      margin-bottom: 21px;
+    }
+    table.data {
+      min-width: 250px;
+      margin-bottom: 21px;
+    }
+    table.data caption {
+      border-bottom: 1px dotted #777;
+    }
+    table.data td, table.data th {
+      text-align: center;
+      padding: 3px 8px;
+      border: 1px solid #fff;
+    }
+    table.data tbody td, table.data tbody th {
+      background-color: #ddd;
+    }  
+    .tablechart {
+      margin-bottom: 21px;
+    }
+    h2 {
+      margin-top: 60px;
+      border-bottom: 1px dotted #777;
+    }
+    .tablechart {
+      float: right;
+      width: 740px;
+      height: 400px;
+    }
+    #slider { 
+      width: 300px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>jQuery Tablechart plugin examples</h1>
+
+<p>Tablechart is a jQuery plugin that scrapes HTML tables and generates charts with jqPlot.</p>
+
+<p><a href="https://github.com/eads/tablechart">Download Tablechart from Github</a>.</p>
+
+<h2>Line chart with category axis (no options)</h2>
+
+<p>Requires <code>jqplot.categoryAxisRenderer.js</code>.</p>
+
+<pre>$('#basic-table').tablechart();</pre>
+
+<table id="basic-table" class="data">
+  <caption>Pet sales by month, 2010</caption>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Puppies</th>
+      <th>Kittens</th>
+      <th>Goldfish</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Jan</th>
+      <td>5</td>
+      <td>13</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Feb</th>
+      <td>9</td>
+      <td>20</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Mar</th>
+      <td>5</td>
+      <td>19</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Apr</th>
+      <td>10</td>
+      <td>21</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>May</th>
+      <td>12</td>
+      <td>18</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Jun</th>
+      <td>15</td>
+      <td>22</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Jul</th>
+      <td>15</td>
+      <td>18</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Aug</th>
+      <td>13</td>
+      <td>19</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Sep</th>
+      <td>11</td>
+      <td>25</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Oct</th>
+      <td>17</td>
+      <td>23</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Nov</th>
+      <td>20</td>
+      <td>25</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Dec</th>
+      <td>21</td>
+      <td>28</td>
+      <td>12</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Bar chart with category axis</h2>
+
+<p>Shows simple use of <code>plotOptions</code> to display grouped bar chart. Requires <code>jqplot.categoryAxisRenderer.js</code> and <code>jqplot.barRenderer.js</code>.</p>
+
+<pre>
+$('#barchart-table').tablechart({
+  plotOptions: {
+    seriesDefaults: {
+      renderer: $.jqplot.BarRenderer,
+    }
+  }
+});
+</pre>
+
+<table id="barchart-table" class="data">
+  <caption>Pet sales by month, 2010</caption>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Puppies</th>
+      <th>Kittens</th>
+      <th>Goldfish</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Jan</th>
+      <td>5</td>
+      <td>13</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Feb</th>
+      <td>9</td>
+      <td>20</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Mar</th>
+      <td>5</td>
+      <td>19</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Apr</th>
+      <td>10</td>
+      <td>21</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>May</th>
+      <td>12</td>
+      <td>18</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Jun</th>
+      <td>15</td>
+      <td>22</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Jul</th>
+      <td>15</td>
+      <td>18</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Aug</th>
+      <td>13</td>
+      <td>19</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Sep</th>
+      <td>11</td>
+      <td>25</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Oct</th>
+      <td>17</td>
+      <td>23</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Nov</th>
+      <td>20</td>
+      <td>25</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Dec</th>
+      <td>21</td>
+      <td>28</td>
+      <td>12</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Scrape multiple tables</h2>
+
+<p>Tables are in a <code>&lt;div&gt;</code> with ID <code>multiple-tables</code>.</p>
+
+<pre>$('#multiple-tables').tablechart();</pre>
+
+<div id="multiple-tables">
+  <table class="data">
+    <caption>Puppy and collar sales by month, 2010</caption>
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Puppies</th>
+        <th>Collars</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Jan</th>
+        <td>5</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <th>Feb</th>
+        <td>9</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <th>Mar</th>
+        <td>5</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <th>Apr</th>
+        <td>10</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <th>May</th>
+        <td>12</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <th>Jun</th>
+        <td>15</td>
+        <td>4</td>
+      </tr>
+      <tr>
+        <th>Jul</th>
+        <td>15</td>
+        <td>6</td>
+      </tr>
+      <tr>
+        <th>Aug</th>
+        <td>13</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <th>Sep</th>
+        <td>11</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <th>Oct</th>
+        <td>17</td>
+        <td>4</td>
+      </tr>
+      <tr>
+        <th>Nov</th>
+        <td>20</td>
+        <td>8</td>
+      </tr>
+      <tr>
+        <th>Dec</th>
+        <td>21</td>
+        <td>7</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="data">
+    <caption>Kitten sales by month, 2010</caption>
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Kittens</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Mar</th>
+        <td>19</td>
+      </tr>
+      <tr>
+        <th>Apr</th>
+        <td>21</td>
+      </tr>
+      <tr>
+        <th>May</th>
+        <td>18</td>
+      </tr>
+      <tr>
+        <th>Jun</th>
+        <td>22</td>
+      </tr>
+      <tr>
+        <th>Jul</th>
+        <td>18</td>
+      </tr>
+      <tr>
+        <th>Aug</th>
+        <td>19</td>
+      </tr>
+      <tr>
+        <th>Sep</th>
+        <td>25</td>
+      </tr>
+      <tr>
+        <th>Oct</th>
+        <td>23</td>
+      </tr>
+      <tr>
+        <th>Nov</th>
+        <td>25</td>
+      </tr>
+      <tr>
+        <th>Dec</th>
+        <td>28</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Numeric x-axis</h2>
+
+<p>Here, we use the <code>parseFloat</code> parser for x values and the jqPlot <code>LinearAxisRenderer</code> to create a x-y traditional plot. Note how the discontinuities in the data are accurately reflected in the chart.</p>
+
+<pre>
+$('#plot-table').tablechart({
+  parseX: Tablechart.parseFloat,
+  plotOptions: {
+    axes: {
+      xaxis: {
+        renderer: $.jqplot.LinearAxisRenderer,
+        min: 0,
+        max: 7,
+        numberTicks: 8
+      },
+      yaxis: {
+        min: 0,
+        max: 40
+      }
+    },
+    legend: {
+      show: false
+    }
+  }
+});
+</pre>
+
+<table id="plot-table" class="data">
+  <caption>f(x) = x<sup>2</sup></caption>
+  <thead>
+    <tr>
+      <th>x</th>
+      <th>f(x)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1.0</th>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>1.5</th>
+      <td>2.25</td>
+    </tr>
+    <tr>
+      <th>2.0</th>
+      <td>4.00</td>
+    </tr>
+    <tr>
+      <th>3.0</th>
+      <td>9.00</td>
+    </tr>
+    <tr>
+      <th>3.5</th>
+      <td>12.25</td>
+    </tr>
+    <tr>
+      <th>4.0</th>
+      <td>16.00</td>
+    </tr>
+    <tr>
+      <th>4.5</th>
+      <td>20.25</td>
+    </tr>
+    <tr>
+      <th>5.5</th>
+      <td>30.25</td>
+    </tr>
+    </tr>
+      <th>6.0</th>
+      <td>36.00</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Multiple axes</h2>
+
+<p>Requires <code>jqplot.pointLabels.js</code> and <code>jqplot.barRenderer.js</code>.</p>
+
+<pre>
+$('#multiple-axes').tablechart({
+  plotOptions: {
+    seriesColors: [ '#999999', '#2166ac' ],
+    seriesDefaults: {
+      pointLabels: { show: true },
+    },
+    series: [{
+      yaxis: 'y2axis',
+      rendererOptions: { barWidth: 10 },
+    }],
+    axes: {
+      y2axis: { 
+        min: 0,
+        max: 600
+      }
+    }
+  },
+});
+</pre>
+
+<table id="multiple-axes" class="data">
+  <caption>Puppy sales and profit, 2010</caption>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Profit</th>
+      <th>Puppies sold</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Jan</th>
+      <td>40</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Feb</th>
+      <td>175</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>Mar</th>
+      <td>180</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>Apr</th>
+      <td>120</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>May</th>
+      <td>157</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>Jun</th>
+      <td>150</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>Jul</th>
+      <td>151</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>Aug</th>
+      <td>132</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>Sep</th>
+      <td>114</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>Oct</th>
+      <td>179</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>Nov</th>
+      <td>209</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>Dec</th>
+      <td>321</td>
+      <td>28</td>
+    </tr>
+  </tbody>
+</table> 
+
+<h2>Series attribute options</h2>
+
+<p>Requires <code>jqplot.barRenderer.js</code>.</p>
+
+<pre>
+$('#series-options').tablechart({
+  parseOptions: true,
+  plotOptions: {
+    axes: {
+      xaxis: {
+        renderer: $.jqplot.LinearAxisRenderer,
+        min: 0,
+        max: 100
+      },
+    }
+  }
+});
+</pre>
+
+<p>Other than setting <code>parseOptions</code> to <code>true</code>, the magic is not in the invocation but in the markup:</p>
+
+<pre>
+&lt;thead&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Month&lt;/th&gt;
+    &lt;th data-seriesoptions='{"renderer":"$.jqplot.BarRenderer","rendererOptions":{"barWidth":10},"color":"#aaaaaa"}'&gt;
+      Beans
+    &lt;/th&gt;
+    &lt;th data-seriesoptions='{"markerOptions":{"size":6,"style":"filledSquare"}}'&gt;
+      Rice
+    &lt;/th&gt;
+  &lt;/tr&gt;
+&lt;/thead&gt;
+</pre>
+
+<table id="series-options" class="data hide">
+  <caption>Average and actual distribution</caption>
+  <thead>
+    <tr>
+      <th>x</th>
+      <th data-seriesoptions='{"renderer":"$.jqplot.BarRenderer","rendererOptions":{"barWidth":4, "barMargin":2},"color":"#aaaaaa"}'>
+        Average
+      </th>
+      <th>Actual</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<tr>
+  <th>0</th>
+  <td>45.5938127766</td>
+  <td>60.5938127766</td>
+</tr>
+<tr>
+  <th>1</th>
+  <td>47.0341432388</td>
+  <td></td>
+</tr>
+<tr>
+  <th>2</th>
+  <td>48.4894980091</td>
+  <td></td>
+</tr>
+<tr>
+  <th>3</th>
+  <td>49.9584854133</td>
+  <td></td>
+</tr>
+<tr>
+  <th>4</th>
+  <td>51.439645094</td>
+  <td></td>
+</tr>
+<tr>
+  <th>5</th>
+  <td>52.9314496543</td>
+  <td>61.9314496543</td>
+</tr>
+<tr>
+  <th>6</th>
+  <td>54.432306564</td>
+  <td></td>
+</tr>
+<tr>
+  <th>7</th>
+  <td>55.9405603295</td>
+  <td></td>
+</tr>
+<tr>
+  <th>8</th>
+  <td>57.454494926</td>
+  <td></td>
+</tr>
+<tr>
+  <th>9</th>
+  <td>58.9723364912</td>
+  <td></td>
+</tr>
+<tr>
+  <th>10</th>
+  <td>60.4922562764</td>
+  <td>79.4922562764</td>
+</tr>
+<tr>
+  <th>11</th>
+  <td>62.0123738512</td>
+  <td></td>
+</tr>
+<tr>
+  <th>12</th>
+  <td>63.5307605559</td>
+  <td></td>
+</tr>
+<tr>
+  <th>13</th>
+  <td>65.0454431959</td>
+  <td></td>
+</tr>
+<tr>
+  <th>14</th>
+  <td>66.5544079682</td>
+  <td></td>
+</tr>
+<tr>
+  <th>15</th>
+  <td>68.0556046128</td>
+  <td>81.0556046128</td>
+</tr>
+<tr>
+  <th>16</th>
+  <td>69.5469507767</td>
+  <td></td>
+</tr>
+<tr>
+  <th>17</th>
+  <td>71.0263365803</td>
+  <td></td>
+</tr>
+<tr>
+  <th>18</th>
+  <td>72.4916293723</td>
+  <td></td>
+</tr>
+<tr>
+  <th>19</th>
+  <td>73.9406786592</td>
+  <td></td>
+</tr>
+<tr>
+  <th>20</th>
+  <td>75.3713211956</td>
+  <td>87.3713211956</td>
+</tr>
+<tr>
+  <th>21</th>
+  <td>76.7813862177</td>
+  <td></td>
+</tr>
+<tr>
+  <th>22</th>
+  <td>78.1687008031</td>
+  <td></td>
+</tr>
+<tr>
+  <th>23</th>
+  <td>79.5310953402</td>
+  <td></td>
+</tr>
+<tr>
+  <th>24</th>
+  <td>80.8664090876</td>
+  <td></td>
+</tr>
+<tr>
+  <th>25</th>
+  <td>82.1724958034</td>
+  <td>102.172495803</td>
+</tr>
+<tr>
+  <th>26</th>
+  <td>83.4472294253</td>
+  <td></td>
+</tr>
+<tr>
+  <th>27</th>
+  <td>84.6885097807</td>
+  <td></td>
+</tr>
+<tr>
+  <th>28</th>
+  <td>85.8942683045</td>
+  <td></td>
+</tr>
+<tr>
+  <th>29</th>
+  <td>87.0624737441</td>
+  <td></td>
+</tr>
+<tr>
+  <th>30</th>
+  <td>88.1911378298</td>
+  <td>103.19113783</td>
+</tr>
+<tr>
+  <th>31</th>
+  <td>89.2783208876</td>
+  <td></td>
+</tr>
+<tr>
+  <th>32</th>
+  <td>90.3221373732</td>
+  <td></td>
+</tr>
+<tr>
+  <th>33</th>
+  <td>91.3207613049</td>
+  <td></td>
+</tr>
+<tr>
+  <th>34</th>
+  <td>92.2724315741</td>
+  <td></td>
+</tr>
+<tr>
+  <th>35</th>
+  <td>93.1754571099</td>
+  <td>109.17545711</td>
+</tr>
+<tr>
+  <th>36</th>
+  <td>94.0282218802</td>
+  <td></td>
+</tr>
+<tr>
+  <th>37</th>
+  <td>94.8291897045</td>
+  <td></td>
+</tr>
+<tr>
+  <th>38</th>
+  <td>95.5769088615</td>
+  <td></td>
+</tr>
+<tr>
+  <th>39</th>
+  <td>96.2700164708</td>
+  <td></td>
+</tr>
+<tr>
+  <th>40</th>
+  <td>96.9072426305</td>
+  <td>103.90724263</td>
+</tr>
+<tr>
+  <th>41</th>
+  <td>97.4874142927</td>
+  <td></td>
+</tr>
+<tr>
+  <th>42</th>
+  <td>98.0094588612</td>
+  <td></td>
+</tr>
+<tr>
+  <th>43</th>
+  <td>98.4724074955</td>
+  <td></td>
+</tr>
+<tr>
+  <th>44</th>
+  <td>98.8753981059</td>
+  <td></td>
+</tr>
+<tr>
+  <th>45</th>
+  <td>99.2176780293</td>
+  <td>119.217678029</td>
+</tr>
+<tr>
+  <th>46</th>
+  <td>99.4986063708</td>
+  <td></td>
+</tr>
+<tr>
+  <th>47</th>
+  <td>99.7176560037</td>
+  <td></td>
+</tr>
+<tr>
+  <th>48</th>
+  <td>99.8744152176</td>
+  <td></td>
+</tr>
+<tr>
+  <th>49</th>
+  <td>99.9685890077</td>
+  <td></td>
+</tr>
+<tr>
+  <th>50</th>
+  <td>100.0</td>
+  <td>112.0</td>
+</tr>
+<tr>
+  <th>51</th>
+  <td>99.9685890077</td>
+  <td></td>
+</tr>
+<tr>
+  <th>52</th>
+  <td>99.8744152176</td>
+  <td></td>
+</tr>
+<tr>
+  <th>53</th>
+  <td>99.7176560037</td>
+  <td></td>
+</tr>
+<tr>
+  <th>54</th>
+  <td>99.4986063708</td>
+  <td></td>
+</tr>
+<tr>
+  <th>55</th>
+  <td>99.2176780293</td>
+  <td>110.217678029</td>
+</tr>
+<tr>
+  <th>56</th>
+  <td>98.8753981059</td>
+  <td></td>
+</tr>
+<tr>
+  <th>57</th>
+  <td>98.4724074955</td>
+  <td></td>
+</tr>
+<tr>
+  <th>58</th>
+  <td>98.0094588612</td>
+  <td></td>
+</tr>
+<tr>
+  <th>59</th>
+  <td>97.4874142927</td>
+  <td></td>
+</tr>
+<tr>
+  <th>60</th>
+  <td>96.9072426305</td>
+  <td>115.90724263</td>
+</tr>
+<tr>
+  <th>61</th>
+  <td>96.2700164708</td>
+  <td></td>
+</tr>
+<tr>
+  <th>62</th>
+  <td>95.5769088615</td>
+  <td></td>
+</tr>
+<tr>
+  <th>63</th>
+  <td>94.8291897045</td>
+  <td></td>
+</tr>
+<tr>
+  <th>64</th>
+  <td>94.0282218802</td>
+  <td></td>
+</tr>
+<tr>
+  <th>65</th>
+  <td>93.1754571099</td>
+  <td>100.17545711</td>
+</tr>
+<tr>
+  <th>66</th>
+  <td>92.2724315741</td>
+  <td></td>
+</tr>
+<tr>
+  <th>67</th>
+  <td>91.3207613049</td>
+  <td></td>
+</tr>
+<tr>
+  <th>68</th>
+  <td>90.3221373732</td>
+  <td></td>
+</tr>
+<tr>
+  <th>69</th>
+  <td>89.2783208876</td>
+  <td></td>
+</tr>
+<tr>
+  <th>70</th>
+  <td>88.1911378298</td>
+  <td>95.1911378298</td>
+</tr>
+<tr>
+  <th>71</th>
+  <td>87.0624737441</td>
+  <td></td>
+</tr>
+<tr>
+  <th>72</th>
+  <td>85.8942683045</td>
+  <td></td>
+</tr>
+<tr>
+  <th>73</th>
+  <td>84.6885097807</td>
+  <td></td>
+</tr>
+<tr>
+  <th>74</th>
+  <td>83.4472294253</td>
+  <td></td>
+</tr>
+<tr>
+  <th>75</th>
+  <td>82.1724958034</td>
+  <td>92.1724958034</td>
+</tr>
+<tr>
+  <th>76</th>
+  <td>80.8664090876</td>
+  <td></td>
+</tr>
+<tr>
+  <th>77</th>
+  <td>79.5310953402</td>
+  <td></td>
+</tr>
+<tr>
+  <th>78</th>
+  <td>78.1687008031</td>
+  <td></td>
+</tr>
+<tr>
+  <th>79</th>
+  <td>76.7813862177</td>
+  <td></td>
+</tr>
+<tr>
+  <th>80</th>
+  <td>75.3713211956</td>
+  <td>92.3713211956</td>
+</tr>
+<tr>
+  <th>81</th>
+  <td>73.9406786592</td>
+  <td></td>
+</tr>
+<tr>
+  <th>82</th>
+  <td>72.4916293723</td>
+  <td></td>
+</tr>
+<tr>
+  <th>83</th>
+  <td>71.0263365803</td>
+  <td></td>
+</tr>
+<tr>
+  <th>84</th>
+  <td>69.5469507767</td>
+  <td></td>
+</tr>
+<tr>
+  <th>85</th>
+  <td>68.0556046128</td>
+  <td>81.0556046128</td>
+</tr>
+<tr>
+  <th>86</th>
+  <td>66.5544079682</td>
+  <td></td>
+</tr>
+<tr>
+  <th>87</th>
+  <td>65.0454431959</td>
+  <td></td>
+</tr>
+<tr>
+  <th>88</th>
+  <td>63.5307605559</td>
+  <td></td>
+</tr>
+<tr>
+  <th>89</th>
+  <td>62.0123738512</td>
+  <td></td>
+</tr>
+<tr>
+  <th>90</th>
+  <td>60.4922562764</td>
+  <td>67.4922562764</td>
+</tr>
+<tr>
+  <th>91</th>
+  <td>58.9723364912</td>
+  <td></td>
+</tr>
+<tr>
+  <th>92</th>
+  <td>57.454494926</td>
+  <td></td>
+</tr>
+<tr>
+  <th>93</th>
+  <td>55.9405603295</td>
+  <td></td>
+</tr>
+<tr>
+  <th>94</th>
+  <td>54.432306564</td>
+  <td></td>
+</tr>
+<tr>
+  <th>95</th>
+  <td>52.9314496543</td>
+  <td>61.9314496543</td>
+</tr>
+<tr>
+  <th>96</th>
+  <td>51.439645094</td>
+  <td></td>
+</tr>
+<tr>
+  <th>97</th>
+  <td>49.9584854133</td>
+  <td></td>
+</tr>
+<tr>
+  <th>98</th>
+  <td>48.4894980091</td>
+  <td></td>
+</tr>
+<tr>
+  <th>99</th>
+  <td>47.0341432388</td>
+  <td></td>
+</tr>
+
+  
+  </tbody>
+</table> 
+
+</body>
+</html>
